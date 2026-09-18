@@ -44,7 +44,8 @@
         }
 
         #listaHistorii {
-            max-height: 300px;
+            max-height: auto;
+            margin-bottom: 10px;
             overflow-y: auto;
             color: white;
         }
@@ -66,7 +67,7 @@
 
         .kalkulator {
             position: relative;
-            width: 380px;
+            width: 550px;
             box-sizing: border-box;
             padding: 28px;
             background: #726f6f;
@@ -110,7 +111,7 @@
 
         .przyciski {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-top: 22px;
         }
@@ -135,7 +136,20 @@
 
         .pola {
             margin-top: 10px;
-            width: 175px;
+            width: calc(100%);
+            box-sizing: border-box;
+        }
+
+        .pola {
+            width: 100%;
+            background: #fe5454;
+            color: #f5f5f5;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .pola:hover {
+            background: #f97272;
         }
 
         .credits {
@@ -225,7 +239,11 @@
                 <button onclick="podziel()">Podziel (÷)</button>
                 <button onclick="poteguj()">Potęguj (A^B)</button>
                 <button onclick="pierwiastkuj()">Pierwiastkuj (√A)</button>
+                <button onclick="modulo()">Modulo (A%B)</button>
+                <button onclick="procent()">Procent (A% z B)</button>
+                <button onclick="logarytm()">Logarytm (logB(A))</button>
             </div>
+            
             <button class="pola" onclick="wyczyscPola()">Wyczyść Pola</button>
             
             <div class="wynik-box">
@@ -300,6 +318,40 @@
                 let wynik_pierwiastkowania = Math.sqrt(A).toFixed(3);
                 document.getElementById("wynik").innerHTML = "Wynik: " + wynik_pierwiastkowania
                 dodajDoHistorii(`√${A} = ${wynik_pierwiastkowania}`);
+            }
+        }
+
+        function modulo() {
+            let A = Number(document.getElementById("a").value);
+            let B = Number(document.getElementById("b").value);
+
+            if (B == 0) {
+                pokazToast("Nie można dzielić przez 0");
+            } else {
+                let wynik_modulo = A % B;
+                document.getElementById("wynik").innerHTML = "Wynik: " + wynik_modulo;
+                dodajDoHistorii(`${A} % ${B} = ${wynik_modulo}`);
+            }
+        }
+
+        function procent() {
+            let A = Number(document.getElementById("a").value);
+            let B = Number(document.getElementById("b").value);
+            let wynik_procentu = (A * B) / 100;
+            document.getElementById("wynik").innerHTML = "Wynik: " + wynik_procentu;
+            dodajDoHistorii(`${A}% z ${B} = ${wynik_procentu}`);
+        }
+
+        function logarytm() {
+            let A = Number(document.getElementById("a").value);
+            let B = Number(document.getElementById("b").value);
+
+            if (A <= 0 || B <= 0 || B === 1) {
+                pokazToast("Nieprawidłowe wartości dla logarytmu!");
+            } else {
+                let wynik_logarytmu = Math.log(A) / Math.log(B);
+                document.getElementById("wynik").innerHTML = "Wynik: " + wynik_logarytmu.toFixed(3);
+                dodajDoHistorii(`log${B}(${A}) = ${wynik_logarytmu.toFixed(3)}`);
             }
         }
 
