@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Prosty</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #373737;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .kontener {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .historia {
+            width: 300px;
+            height: 590px;
+            box-sizing: border-box;
+            padding: 25px;
+
+            display: flex;
+            flex-direction: column;
+
+            background-color: rgb(114, 111, 111);
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .historia h2 {
+            margin-top: 0;
+            text-align: center;
+            color: #f1f1f1;
+            font-size: 22px;
+        }
+
+        #listaHistorii {
+            max-height: 300px;
+            overflow-y: auto;
+            color: white;
+        }
+
+        .dzialanie {
+            padding: 8px;
+            margin-bottom: 8px;
+            background-color: rgba(0, 0, 0, 0.15);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .wyczysc {
+            width: 100%;
+            margin-top: auto;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .kalkulator {
+            position: relative;
+            width: 380px;
+            box-sizing: border-box;
+            padding: 28px;
+            background: #726f6f;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 25px;
+            color: #f1f1f1;
+            font-size: 30px;
+        }
+
+        .pole {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        label {
+            margin-bottom: 7px;
+            color: #f1f1f1;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #d1b28c;
+        }
+
+        .przyciski {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        button {
+            min-height: 48px;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 9px;
+            background: #6f6252;
+            color: #f5f5f5;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        button:hover {
+            background: #a9957c;
+            transform: translateY(-2px);
+        }
+
+        .pola {
+            margin-top: 10px;
+            width: 175px;
+        }
+
+        .credits {
+            position: fixed;
+            left: 15px;
+            bottom: 18px;
+            margin: 0px;
+
+            color: #a7a6a6;
+            font-size: 16px;
+        }
+
+        .credits a {
+            color: #a9957c;
+            text-decoration: none;
+        }
+
+        .credits a:hover {
+            color: #e0a96d;
+            text-decoration: underline;
+        }
+
+        .toast {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: #fb6464;
+            color: #222;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            z-index: 10;
+        }
+
+        .toast.pokaz {
+            visibility: visible;
+            opacity: 0.8;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .wynik-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        #wynik {
+            margin: 3px 0 0;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <p class="credits">Calculator by <a href="https://www.github.com/ViaFaniq">ViaFaniq</a></p>
+    <div class="kontener">
+        <div class="kalkulator">
+            <div id="toast" class="toast"></div>
+
+            <h1>Prosty Kalkulator</h1>
+
+            <div class="pole">
+                <label for="a">Liczba A:</label>
+                <input type="number" id="a">
+            </div>
+
+            <div class="pole">
+                <label for="b">Liczba B:</label>
+                <input type="number" id="b">
+            </div>
+
+            <div class="przyciski">
+                <button onclick="dodaj()">Dodaj (+)</button>
+                <button onclick="odejmij()">Odejmij (-)</button>
+                <button onclick="pomnoz()">Pomnóż (×)</button>
+                <button onclick="podziel()">Podziel (÷)</button>
+                <button onclick="poteguj()">Potęguj (A^B)</button>
+                <button onclick="pierwiastkuj()">Pierwiastkuj (√A)</button>
+            </div>
+            <button class="pola" onclick="wyczyscPola()">Wyczyść Pola</button>
+            
+            <div class="wynik-box">
+                <p id="wynik">Wynik: </p>
+            </div>
+
+        </div>
+
+        <div class="historia">
+            <h2>Historia Działań</h2>
+            <div id="listaHistorii"></div>
+
+            <button class="wyczysc" onclick="wyczyscHistorie()">Wyczyść</button>
+        </div>
+
+    </div>
+
+
+    <script>
+        function dodaj() {
+            let A = Number(document.getElementById("a").value);
+            let B = Number(document.getElementById("b").value);
+            let wynik_dodawania = A + B;
+            document.getElementById("wynik").innerHTML = "Wynik: " + wynik_dodawania;
+            dodajDoHistorii(`${A} + ${B} = ${wynik_dodawania}`);
+        }
+
+        function odejmij() {
+            let A = Number(document.getElementById("a").value);
+            let B = Number(document.getElementById("b").value);
+            let wynik_odejmowania = A - B;
+            document.getElementById("wynik").innerHTML = "Wynik: " + wynik_odejmowania;
+            dodajDoHistorii(`${A} - ${B} = ${wynik_odejmowania}`);
+        }
+
+        function pomnoz() {
+            let A = Number(document.getElementById("a").value);
+            let B = Number(document.getElementById("b").value);
+            let wynik_mnozenia = A * B;
+            document.getElementById("wynik").innerHTML = "Wynik: " + wynik_mnozenia;
+            dodajDoHistorii(`${A} × ${B} = ${wynik_mnozenia}`);
+        }
+
+        function podziel() {
+            let A = Number(document.getElementById("a").value);
+            let B = Number(document.getElementById("b").value);
+
+            if (B == 0) {
+                pokazToast("Nie można dzielić przez 0");
+            } else {
+                let wynik_dzielenia = A / B;
+                document.getElementById("wynik").innerHTML = "Wynik: " + wynik_dzielenia;
+                dodajDoHistorii(`${A} ÷ ${B} = ${wynik_dzielenia}`);
+            }
+
+        }
+
+        function poteguj() {
+            let A = Number(document.getElementById("a").value);
+            let B = Number(document.getElementById("b").value);
+            let wynik_potegowania = A ** B;
+            document.getElementById("wynik").innerHTML = "Wynik: " + wynik_potegowania;
+            dodajDoHistorii(`${A}^${B} = ${wynik_potegowania}`);
+        }
+
+        function pierwiastkuj() {
+            let A = Number(document.getElementById("a").value);
+
+            if (A < 0) {
+                pokazToast("Nie można obliczyć pierwiastka z liczby ujemnej!");
+            } else {
+                let wynik_pierwiastkowania = Math.sqrt(A).toFixed(3);
+                document.getElementById("wynik").innerHTML = "Wynik: " + wynik_pierwiastkowania
+                dodajDoHistorii(`√${A} = ${wynik_pierwiastkowania}`);
+            }
+        }
+
+        function dodajDoHistorii(tekst) {
+            const historia = document.getElementById("listaHistorii");
+
+            const element = document.createElement("div");
+            element.className = "dzialanie"
+            element.textContent = tekst;
+
+            historia.prepend(element);
+        }
+
+        function wyczyscHistorie() {
+            document.getElementById("listaHistorii").innerHTML = "";
+        }
+
+        function wyczyscPola() {
+            document.getElementById("a").value = ""
+            document.getElementById("b").value = ""
+
+            document.getElementById("wynik").innerHTML = "Wynik: "
+
+        }
+
+        function pokazToas0t(wiadomosc) {
+            const toast = document.getElementById("toast");
+            toast.textContent = wiadomosc;
+            toast.classList.add("pokaz");
+
+            setTimeout(() => {
+                toast.classList.remove("pokaz");
+            }, 3000);
+        }
+
+    </script>
+</body>
+</html>
